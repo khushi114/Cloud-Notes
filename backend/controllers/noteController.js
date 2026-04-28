@@ -1,6 +1,6 @@
 const { PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const s3Client = require('../config/s3');
 const { db } = require('../config/firebase');
 
@@ -39,7 +39,7 @@ exports.uploadNote = async (req, res) => {
 
     // Prepare S3 upload parameters
     const fileExtension = req.file.originalname.split('.').pop();
-    const s3Key = `notes/${uuidv4()}.${fileExtension}`;
+    const s3Key = `notes/${crypto.randomUUID()}.${fileExtension}`;
     const bucketName = process.env.AWS_S3_BUCKET_NAME;
 
     const command = new PutObjectCommand({
